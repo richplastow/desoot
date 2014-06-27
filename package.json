@@ -1,0 +1,11 @@
+{
+  "name": "desoot",
+  "version": "0.1.0",
+  "description": "A Looptopian desert",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rich Plastow",
+  "license": "MIT"
+}
