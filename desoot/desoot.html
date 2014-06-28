@@ -8,6 +8,34 @@
     <!-- camera -->
     <navigationinfo type="turntable"></navigationinfo>
 
+    <!-- guides -->
+    {{#if config.guides}}
+    <transform translation="5 2 0">
+        <shape>
+            <appearance><material diffuseColor="#000"></material></appearance>
+            <text length="0" string="N 5 2 0"></text>
+        </shape>
+    </transform>
+    <transform translation="0 2 5">
+        <shape>
+            <appearance><material diffuseColor="#000"></material></appearance>
+            <text length="0" string="E 0 2 5"></text>
+        </shape>
+    </transform>
+    <transform translation="-5 2 0">
+        <shape>
+            <appearance><material diffuseColor="#000"></material></appearance>
+            <text length="0" string="S -5 2 0"></text>
+        </shape>
+    </transform>
+    <transform translation="0 2 -5">
+        <shape>
+            <appearance><material diffuseColor="#000"></material></appearance>
+            <text length="0" string="W 0 2 -5"></text>
+        </shape>
+    </transform>
+    {{/if}}
+
     <!-- terrain -->
     {{#each terrain}}
     <transform translation="{{x}} 0 {{z}}" scale="1 .1 1">
@@ -15,7 +43,7 @@
         <appearance>
           <material diffuseColor="{{color}}"></material>
         </appearance>
-          <ElevationGrid creaseAngle="1.57" solid="false" xDimension="{{config.section.width}}" zDimension="{{config.section.length}}" height="{{grid}}"></ElevationGrid>
+          <ElevationGrid creaseAngle="1.57" solid="false" xDimension="{{config.xSectionExtentInc}}" zDimension="{{config.zSectionExtentInc}}" height="{{height}}"></ElevationGrid>
       </shape>
     </transform>
     {{/each}}
