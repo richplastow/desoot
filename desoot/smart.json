@@ -1,3 +1,5 @@
 {
-  "packages": {}
+  "packages": {
+    "x3dom": {}
+  }
 }

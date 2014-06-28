@@ -3,11 +3,35 @@
 </head>
 
 <body>
-  {{> hello}}
-</body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
-</template>
+  <x3d id="x3d"><scene>
+    <!-- camera -->
+    <navigationinfo type="turntable"></navigationinfo>
+
+    <!-- terrain -->
+    {{#each terrain}}
+    <transform translation="{{x}} 0 {{z}}" scale="1 .1 1">
+      <shape id="{{_id}}">
+        <appearance>
+          <material diffuseColor="{{color}}"></material>
+        </appearance>
+          <ElevationGrid creaseAngle="1.57" solid="false" xDimension="{{config.section.width}}" zDimension="{{config.section.length}}" height="{{grid}}"></ElevationGrid>
+      </shape>
+    </transform>
+    {{/each}}
+
+
+  </scene></x3d>
+  <script>
+    !function ($) {
+        var x3dResize = function () {
+            $('#x3d').css( 'height', $(window).height() );
+            $('#x3dom-x3d-canvas scene').focus(); // @todo is this working?
+        };
+        $(function() { // document ready
+            $(window).on('resize', x3dResize);
+            x3dResize();
+        });
+    }(jQuery)
+  </script>
+</body>
