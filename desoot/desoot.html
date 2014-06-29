@@ -6,7 +6,118 @@
 
   <x3d id="x3d"><scene>
     <!-- camera -->
-    <navigationinfo type="turntable"></navigationinfo>
+    <navigationinfo type="turntable" avatarSize="10" headlight="false"></navigationinfo>
+    <viewpoint centerOfRotation="40 2 40" position="40 8 50" orientation="1 0 0  -.5"></viewpoint>
+    <Fog color="#359" visibilityRange="50"></Fog>
+    <DirectionalLight ambientIntensity='0' color='1,1,1' direction='0,0,-1' global='true' intensity='.2' on='true' shadowCascades='1' shadowFilterSize='0' shadowIntensity='0' shadowMapSize='1024' shadowOffset='0' shadowSplitFactor='1' shadowSplitOffset='0.1' zFar='-1' zNear='-1' ></DirectionalLight>
+
+    <!-- looptopian -->
+    <Transform translation="40 2 40" scale=".1 .1 .1">
+
+      <Group def="LimbLeft"><!-- left leg -->
+        <Shape def="LimbPartLeft">
+          <Extrusion crossSection="1 1  0 -1  -1 1  1 1" scale="1 1  .6 .6" spine="0 0 0  0 2 0"></Extrusion>
+          <Appearance>
+            <Texture hideChildren="true"><canvas width="256" height="256" id="limbLeftCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
+            <TextureTransform rotation=".7" scale=".5 .5"></TextureTransform>
+            <Material diffuseColor="#393"></Material>
+          </Appearance>
+        </Shape>
+        <Transform translation="0 -.7 -2.05" rotation="1 0 0  1.0472" scale="1.5 1.5 1.5">
+          <Shape use="LimbPartLeft"></Shape>
+        </Transform>
+      </Group>
+  
+      <Transform translation="-1.5 .5 2" rotation="1 0 0  -1.0472">
+      <Group def="LimbRight"><!-- right leg -->
+        <Shape def="LimbPartRight">
+          <Extrusion crossSection="1 1  0 -1  -1 1  1 1" scale="1 1  .6 .6" spine="0 0 0  0 2 0"></Extrusion>
+          <Appearance>
+            <Texture hideChildren="true"><canvas width="256" height="256" id="limbRightCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
+            <TextureTransform rotation=".7" scale=".5 .5"></TextureTransform>
+            <Material diffuseColor="#393"></Material>
+          </Appearance>
+        </Shape>
+        <Transform translation="0 -.7 -2.05" rotation="1 0 0  1.0472" scale="1.5 1.5 1.5">
+          <Shape use="LimbPartRight"></Shape>
+        </Transform>
+      </Group>
+      </Transform>
+  
+  
+      <Transform translation="2 2.8 1" rotation="0 1 0  -2.7">
+        <Transform rotation="1 0 0  0" scale=".7 .7 .7">
+          <Group use="LimbLeft"></Group><!-- left arm -->
+        </Transform>
+      </Transform>
+  
+      <Transform translation="-3.5 3 -1" rotation="0 1 0  3.5">
+        <Transform rotation="1 0 0  -1.2" scale=".7 .7 .7">
+          <Group use="LimbRight"></Group><!-- right arm -->
+        </Transform>
+      </Transform>
+  
+      <Group>
+        <Transform rotation="0 0 1  -.07"><!-- slight tilt inward -->
+          <Transform translation="-.5 0 0" rotation="0 1 0  .45"><!-- rotate back-corner to spine (could just redraw shape) -->
+            <Shape>
+              <Extrusion crossSection="1 1  0 -1  -1 1  1 1" scale="1 1 1.2 1.2" spine="0 2 0  0 4 0"></Extrusion>
+              <Appearance>
+                <Texture hideChildren="true"><canvas width="64" height="64" id="torsoLeftCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
+                <Material diffuseColor="#339"></Material>
+              </Appearance>
+            </Shape>
+          </Transform>
+        </Transform>
+        <Transform rotation="0 0 1  .07">
+          <Transform translation="-1 0 0" rotation="0 1 0  -.45">
+            <Shape>
+              <Extrusion crossSection="1 1  0 -1  -1 1  1 1" scale="1 1 1.2 1.2" spine="0 2 0  0 4 0"></Extrusion>
+              <Appearance>
+                <Texture hideChildren="true"><canvas width="64" height="64" id="torsoRightCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
+                <Material diffuseColor="#339"></Material>
+              </Appearance>
+            </Shape>
+          </Transform>
+        </Transform>
+      </Group>
+  
+      <Group>
+        <Transform translation=".7 0 0" rotation="0 0 1  -.07"><!-- slight tilt inward -->
+          <Shape>
+            <Extrusion crossSection="2 2  1.3 -2  -2 -2.2  -2 2  2 2" scale=".9 .9  1 1" spine="0 4 0  0 7 0"></Extrusion>
+            <Appearance>
+              <Texture hideChildren="true"><canvas width="256" height="256" id="faceLeftCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
+              <Material diffuseColor="#939"></Material>
+            </Appearance>
+          </Shape>
+        </Transform>
+        <Transform translation="-2.1 0 0" rotation="0 0 1  .07">
+          <Shape>
+            <Extrusion crossSection="2 2  2 -2.2  -1.3 -2  -2 2  2 2" scale=".9 .9  1 1" spine="0 4 0  0 7 0"></Extrusion>
+            <Appearance>
+              <Texture hideChildren="true"><canvas width="256" height="256" id="faceRightCanvas" style="border:solid 1px black; position:absolute; top:320px; right:20px;"></canvas></Texture>
+              <Material diffuseColor="#939"></Material>
+            </Appearance>
+          </Shape>
+        </Transform>
+      </Group>
+  
+      <Transform translation="2.5 5.3 1.5">
+        <Shape def="Eye">
+          <Sphere radius="1.15"></Sphere>
+          <Appearance>
+            <Material diffuseColor="#021" shininess="1" specularColor="#eef"></Material>
+          </Appearance>
+        </Shape>
+      </Transform>
+  
+      <Transform translation="-4 5.3 1.5">
+        <Group use="Eye"></Group>
+      </Transform>
+
+    </Transform>
+
 
     <!-- guides -->
     {{#if config.guides}}
@@ -43,7 +154,7 @@
         <appearance>
           <material diffuseColor="{{color}}"></material>
         </appearance>
-          <ElevationGrid creaseAngle="1.57" solid="false" xDimension="{{config.xSectionExtentInc}}" zDimension="{{config.zSectionExtentInc}}" height="{{height}}"></ElevationGrid>
+          <ElevationGrid creaseAngle="1.57" solid="false" xDimension="{{config.xSectionExtentPlus1}}" zDimension="{{config.zSectionExtentPlus1}}" height="{{height}}"></ElevationGrid>
       </shape>
     </transform>
     {{/each}}
@@ -54,11 +165,40 @@
     !function ($) {
         var x3dResize = function () {
             $('#x3d').css( 'height', $(window).height() );
-            $('#x3dom-x3d-canvas scene').focus(); // @todo is this working?
+            $('#x3d').focus(); // @todo is this working?
         };
         $(function() { // document ready
             $(window).on('resize', x3dResize);
             x3dResize();
+
+            // var limbCanvas = document.getElementById("limbCanvas");
+            // var context = limbCanvas.getContext("2d");
+
+            // //// Paint the canvas.
+            // function clearImage(col) {
+                
+            //     // redraw the canvas...
+            //     context.fillStyle = col;
+            //     context.fillRect(0, 0, limbCanvas.width, limbCanvas.height);
+                
+            //     context.lineWidth = 1.0;
+            //     context.lineCap = "round";
+                
+            //     // FIXME: Not the final interface
+            //     // limbCanvas.parentNode._x3domNode.invalidateGLObject();
+            // }
+
+            // clearImage('#ccc');
+
+            //// lib/perlin-noise.js
+            contrastNoise( document.getElementById('limbLeftCanvas'),  190, 160);
+            contrastNoise( document.getElementById('limbRightCanvas'), 190, 100);
+            contrastNoise( document.getElementById('torsoLeftCanvas'), 190, 190);
+            contrastNoise( document.getElementById('torsoRightCanvas'),190, 80);
+            contrastNoise( document.getElementById('faceLeftCanvas'),  200, 160);
+            contrastNoise( document.getElementById('faceRightCanvas'), 200, 100);
+            // contrastNoise(faceRIghtCanvas, 200, 180);
+
         });
     }(jQuery)
   </script>

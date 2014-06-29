@@ -9,5 +9,5 @@ config = {
 
 
 //// Autogenerate some configs to simplify rendering the terrain.
-config.xSectionExtentInc = config.xSectionExtent + 1;
-config.zSectionExtentInc = config.zSectionExtent + 1;
+config.xSectionExtentPlus1 = config.xSectionExtent + 1;
+config.zSectionExtentPlus1 = config.zSectionExtent + 1;

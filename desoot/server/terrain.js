@@ -1,4 +1,4 @@
-Terrain.remove({});
+//Terrain.remove({});
 
 var
     //// Used to seamlessly join sections.
@@ -6,19 +6,19 @@ var
   , northEdges = {}
 
     //// Used by `getTerrainType()` to quickly identify which terrain-type to return.
-  , xTerrainExtentDec1 = config.xTerrainExtent - 1
-  , zTerrainExtentDec1 = config.zTerrainExtent - 1
-  , xTerrainExtentDec2 = config.xTerrainExtent - 2
-  , zTerrainExtentDec2 = config.zTerrainExtent - 2
+  , xTerrainExtentMinus1 = config.xTerrainExtent - 1
+  , zTerrainExtentMinus1 = config.zTerrainExtent - 1
+  , xTerrainExtentMinus2 = config.xTerrainExtent - 2
+  , zTerrainExtentMinus2 = config.zTerrainExtent - 2
   , xTerrainExtentMid  = Math.floor( config.xTerrainExtent / 2 )
   , zTerrainExtentMid  = Math.floor( config.zTerrainExtent / 2 )
 
 
-    //// 
+    //// Returns an object which can be used to generates a semi-random terrain section, which varies depending on its location.
   , getTerrainType = function (x, z) {
 
         //// The extreme edges of the terrain are impassable tall mountains.
-        if (0 === x || 0 === z || xTerrainExtentDec1 === x || zTerrainExtentDec1 === z) {
+        if (0 === x || 0 === z || xTerrainExtentMinus1 === x || zTerrainExtentMinus1 === z) {
             return {
                 height: function () { return Math.floor( Math.random() * 35 ) + 10; }
               , colors: [ 'red','orange','brown' ]
@@ -26,7 +26,7 @@ var
         }
 
         //// Sections of the terrain next to the tall mountains are foothills.
-        if (1 === x || 1 === z || xTerrainExtentDec2 === x || zTerrainExtentDec2 === z) {
+        if (1 === x || 1 === z || xTerrainExtentMinus2 === x || zTerrainExtentMinus2 === z) {
             return {
                 height: function () { return Math.floor( Math.random() * 15 ) + 10; }
               , colors: [ 'orange','yellow','green' ]
@@ -48,28 +48,6 @@ var
         }
 
     }
-
-    //// Generates a semi-random height, depending on the given terrain-type.
-  // , randomHeight = function (x, z) {
-
-  //       //// The extreme edges of the terrain are impassable tall mountains.
-  //       if (0 === x || 0 === z || xTerrainExtentDec1 === x || zTerrainExtentDec1 === z) {
-  //           return Math.floor( Math.random() * 35 ) + 10;
-  //       }
-
-  //       //// Sections of the terrain next to the tall mountains are foothills.
-  //       if (1 === x || 1 === z || xTerrainExtentDec2 === x || zTerrainExtentDec2 === z) {
-  //           return Math.floor( Math.random() * 15 ) + 10;
-  //       }
-
-  //       //// The center of the terrain contains a lonely mountain.
-  //       if (xTerrainExtentMid === x && zTerrainExtentMid === z) {
-  //           return Math.floor( Math.random() * 15 ) + 10;
-  //       }
-
-  //       //// 
-  //       return Math.floor( Math.random() * 10 );
-  //   }
 
     //// Generates a semi-random section of terrain.
     //// Returns an object containing:
@@ -107,8 +85,8 @@ var
         ;
 
         //// Step through the section, starting in the South-West corner, proceeding along the Westernmost edge, and ending at the North-East corner.
-        for (z=0; z<config.zSectionExtentInc; z++) {
-            for (x=0; x<config.zSectionExtentInc; x++) {
+        for (z=0; z<config.zSectionExtentPlus1; z++) {
+            for (x=0; x<config.xSectionExtentPlus1; x++) {
 
                 //// If we are on the South or West edges, use the height passed in by the caller, so that this section joins smoothly to the previous. Otherwise, generate a semi-random height.
                 if (0 === x) {
@@ -141,8 +119,8 @@ var
     //// Generates a set of terrain sections, and records them into the `Terrain` collection.
   , randomTerrain = function () {
         var x, z
-          , xTerrainExtentDec = config.xTerrainExtent - 1
-          , zTerrainExtentDec = config.zTerrainExtent - 1
+          , xTerrainExtentMinus = config.xTerrainExtent - 1
+          , zTerrainExtentMinus = config.zTerrainExtent - 1
         ;
 
         //// Step through the terrain, starting in the South-West corner, proceeding along the Westernmost edge, and ending at the North-East corner.
@@ -167,10 +145,10 @@ var
                 section = randomSection( westEdge, southEdge, getTerrainType(x, z) );
 
                 //// Record the edge-heights ready for the adjacent Northerly and Easterly sections, unless we are on the North or East edges.
-                if (xTerrainExtentDec !== x) {
+                if (xTerrainExtentMinus !== x) {
                     northEdges[x + ' ' + z] = section.northEdge;
                 }
-                if (zTerrainExtentDec !== z) {
+                if (zTerrainExtentMinus !== z) {
                     eastEdges[x + ' ' + z]  = section.eastEdge;
                 }
 
