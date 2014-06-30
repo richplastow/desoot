@@ -10,9 +10,14 @@ randomNoise = function(canvas, x, y, width, height, alpha) {
         random = Math.random,
         pixels = imageData.data,
         n = pixels.length,
-        i = 0;
+        i = 0,
+        r
+    ;
     while (i < n) {
-        pixels[i++] = pixels[i++] = pixels[i++] = (random() * 256) | 0;
+        r = ( random() * 250) | 0;
+        pixels[i++] = r;
+        pixels[i++] = r + (  ( random() * 12 ) | 0  ) - 6;
+        pixels[i++] = r + (  ( random() * 12 ) | 0  ) - 6;
         pixels[i++] = alpha;
     }
     g.putImageData(imageData, x, y);
@@ -40,13 +45,14 @@ perlinNoise = function(canvas) {
 }
 
 //// http://stackoverflow.com/a/18495093
-contrastNoise = function(canvas, contrast, brightness, x, y, width, height) {
+contrastNoise = function(canvas, contrast, brightness, minBrightness, x, y, width, height) {
 
     perlinNoise(canvas);
 
     var
         contrast = contrast || 128
       , brightness = brightness || 128
+      , minBrightness = minBrightness || 10
       , x = x || 0
       , y = y || 0
       , width = width || canvas.width
@@ -57,12 +63,15 @@ contrastNoise = function(canvas, contrast, brightness, x, y, width, height) {
 
     var data = imageData.data;
     var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-    var darkness = 256 - brightness;
+    var darkness = 256 - brightness; 
 
     for (var i=0, l=data.length; i<l; i+=4) {
-        data[i]   = ( factor * (data[i]   - darkness) + brightness )// * brightness;
-        data[i+1] = ( factor * (data[i+1] - darkness) + brightness )// * brightness;
-        data[i+2] = ( factor * (data[i+2] - darkness) + brightness )// * brightness;
+        data[i]   = Math.max(  factor * (data[i]   - darkness) + brightness, minBrightness  );
+        data[i+1] = Math.max(  factor * (data[i+1] - darkness) + brightness, minBrightness  );
+        data[i+2] = Math.max(  factor * (data[i+2] - darkness) + brightness, minBrightness  );
+        if ( 765 === data[i] + data[i+1] + data[i+2] ) {
+            data[i+3] = 0; // pure white areas go transparent
+        }
     }
 
     g.putImageData(imageData, x, y);

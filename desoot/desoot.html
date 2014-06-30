@@ -9,37 +9,49 @@
     <navigationinfo type="turntable" avatarSize="10" headlight="false"></navigationinfo>
     <viewpoint centerOfRotation="40 2 40" position="40 8 50" orientation="1 0 0  -.5"></viewpoint>
     <Fog color="#359" visibilityRange="50"></Fog>
-    <DirectionalLight ambientIntensity='0' color='1,1,1' direction='0,0,-1' global='true' intensity='.2' on='true' shadowCascades='1' shadowFilterSize='0' shadowIntensity='0' shadowMapSize='1024' shadowOffset='0' shadowSplitFactor='1' shadowSplitOffset='0.1' zFar='-1' zNear='-1' ></DirectionalLight>
+    <DirectionalLight ambientIntensity='0' color='1,1,1' direction='1 -1 -1' global='true' intensity='.2' on='true' shadowCascades='1' shadowFilterSize='0' shadowIntensity='0' shadowMapSize='256' shadowOffset='0' shadowSplitFactor='1' shadowSplitOffset='0.1' zFar='-1' zNear='-1' ></DirectionalLight>
 
     <!-- looptopian -->
     <Transform translation="40 2 40" scale=".1 .1 .1">
 
       <Group def="LimbLeft"><!-- left leg -->
-        <Shape def="LimbPartLeft">
-          <Extrusion crossSection="1 1  0 -1  -1 1  1 1" scale="1 1  .6 .6" spine="0 0 0  0 2 0"></Extrusion>
+        <Shape def="LimbPartLeftEmissive">
+          <Extrusion def="LimbPartExtrusion" crossSection="1 1  0 -1  -1 1  1 1" scale="1 1  .6 .6" spine="0 0 0  0 2 0"></Extrusion>
+          <Appearance>
+              <Material emissiveColor="#fff"></Material>
+          </Appearance>
+        </Shape>
+        <Shape def="LimbPartLeftCanvas">
+          <Extrusion use="LimbPartExtrusion"></Extrusion>
           <Appearance>
             <Texture hideChildren="true"><canvas width="256" height="256" id="limbLeftCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
             <TextureTransform rotation=".7" scale=".5 .5"></TextureTransform>
-            <Material diffuseColor="#393"></Material>
           </Appearance>
         </Shape>
         <Transform translation="0 -.7 -2.05" rotation="1 0 0  1.0472" scale="1.5 1.5 1.5">
-          <Shape use="LimbPartLeft"></Shape>
+          <Shape use="LimbPartLeftEmissive"></Shape>
+          <Shape use="LimbPartLeftCanvas"></Shape>
         </Transform>
       </Group>
   
       <Transform translation="-1.5 .5 2" rotation="1 0 0  -1.0472">
       <Group def="LimbRight"><!-- right leg -->
-        <Shape def="LimbPartRight">
-          <Extrusion crossSection="1 1  0 -1  -1 1  1 1" scale="1 1  .6 .6" spine="0 0 0  0 2 0"></Extrusion>
+        <Shape def="LimbPartRightEmissive">
+          <Extrusion use="LimbPartExtrusion"></Extrusion>
+          <Appearance>
+              <Material emissiveColor="#fff"></Material>
+          </Appearance>
+        </Shape>
+        <Shape def="LimbPartRightCanvas">
+          <Extrusion use="LimbPartExtrusion"></Extrusion>
           <Appearance>
             <Texture hideChildren="true"><canvas width="256" height="256" id="limbRightCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
             <TextureTransform rotation=".7" scale=".5 .5"></TextureTransform>
-            <Material diffuseColor="#393"></Material>
           </Appearance>
         </Shape>
         <Transform translation="0 -.7 -2.05" rotation="1 0 0  1.0472" scale="1.5 1.5 1.5">
-          <Shape use="LimbPartRight"></Shape>
+          <Shape use="LimbPartRightEmissive"></Shape>
+          <Shape use="LimbPartRightCanvas"></Shape>
         </Transform>
       </Group>
       </Transform>
@@ -56,15 +68,21 @@
           <Group use="LimbRight"></Group><!-- right arm -->
         </Transform>
       </Transform>
-  
+
+      <!-- torso -->
       <Group>
         <Transform rotation="0 0 1  -.07"><!-- slight tilt inward -->
           <Transform translation="-.5 0 0" rotation="0 1 0  .45"><!-- rotate back-corner to spine (could just redraw shape) -->
             <Shape>
-              <Extrusion crossSection="1 1  0 -1  -1 1  1 1" scale="1 1 1.2 1.2" spine="0 2 0  0 4 0"></Extrusion>
+              <Extrusion def="TorsoLeft" crossSection="1 1  0 -1  -1 1  1 1" scale="1 1 1.2 1.2" spine="0 2 0  0 4 0"></Extrusion>
+              <Appearance>
+                <Material emissiveColor="#fff"></Material>
+              </Appearance>
+            </Shape>
+            <Shape>
+              <Extrusion use="TorsoLeft"></Extrusion>
               <Appearance>
                 <Texture hideChildren="true"><canvas width="64" height="64" id="torsoLeftCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
-                <Material diffuseColor="#339"></Material>
               </Appearance>
             </Shape>
           </Transform>
@@ -72,48 +90,69 @@
         <Transform rotation="0 0 1  .07">
           <Transform translation="-1 0 0" rotation="0 1 0  -.45">
             <Shape>
-              <Extrusion crossSection="1 1  0 -1  -1 1  1 1" scale="1 1 1.2 1.2" spine="0 2 0  0 4 0"></Extrusion>
+              <Extrusion def="TorsoRight" crossSection="1 1  0 -1  -1 1  1 1" scale="1 1 1.2 1.2" spine="0 2 0  0 4 0"></Extrusion>
+              <Appearance>
+                <Material emissiveColor="#fff"></Material>
+              </Appearance>
+            </Shape>
+            <Shape>
+              <Extrusion use="TorsoRight"></Extrusion>
               <Appearance>
                 <Texture hideChildren="true"><canvas width="64" height="64" id="torsoRightCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
-                <Material diffuseColor="#339"></Material>
               </Appearance>
             </Shape>
           </Transform>
         </Transform>
       </Group>
-  
+
+      <!-- Face -->
       <Group>
         <Transform translation=".7 0 0" rotation="0 0 1  -.07"><!-- slight tilt inward -->
           <Shape>
-            <Extrusion crossSection="2 2  1.3 -2  -2 -2.2  -2 2  2 2" scale=".9 .9  1 1" spine="0 4 0  0 7 0"></Extrusion>
+            <Extrusion def="SkullLeft" crossSection="2 2  1.3 -2  -2 -2.2  -2 2  2 2" scale=".9 .9  1 1" spine="0 4 0  0 7 0"></Extrusion>
+            <Appearance>
+              <Material emissiveColor="#fff"></Material>
+            </Appearance>
+          </Shape>
+          <Shape>
+            <Extrusion use="SkullLeft"></Extrusion>
             <Appearance>
               <Texture hideChildren="true"><canvas width="256" height="256" id="faceLeftCanvas" style="border:solid 1px black; position:absolute; top:20px; right:20px;"></canvas></Texture>
-              <Material diffuseColor="#939"></Material>
             </Appearance>
           </Shape>
         </Transform>
         <Transform translation="-2.1 0 0" rotation="0 0 1  .07">
           <Shape>
-            <Extrusion crossSection="2 2  2 -2.2  -1.3 -2  -2 2  2 2" scale=".9 .9  1 1" spine="0 4 0  0 7 0"></Extrusion>
+            <Extrusion def="SkullRight" crossSection="2 2  2 -2.2  -1.3 -2  -2 2  2 2" scale=".9 .9  1 1" spine="0 4 0  0 7 0"></Extrusion>
+            <Appearance>
+              <Material emissiveColor="#fff"></Material>
+            </Appearance>
+          </Shape>
+          <Shape>
+            <Extrusion use="SkullRight"></Extrusion>
             <Appearance>
               <Texture hideChildren="true"><canvas width="256" height="256" id="faceRightCanvas" style="border:solid 1px black; position:absolute; top:320px; right:20px;"></canvas></Texture>
-              <Material diffuseColor="#939"></Material>
             </Appearance>
           </Shape>
         </Transform>
       </Group>
   
       <Transform translation="2.5 5.3 1.5">
-        <Shape def="Eye">
-          <Sphere radius="1.15"></Sphere>
+        <Shape><!-- left eye -->
+          <Sphere radius="1.15" subdivision="4 16"></Sphere>
           <Appearance>
-            <Material diffuseColor="#021" shininess="1" specularColor="#eef"></Material>
+            <Material diffuseColor="#000" shininess=".7" specularColor="#cfc"></Material>
           </Appearance>
         </Shape>
       </Transform>
   
       <Transform translation="-4 5.3 1.5">
-        <Group use="Eye"></Group>
+        <Shape><!-- right eye -->
+          <Sphere radius="1.15" subdivision="4 16"></Sphere>
+          <Appearance>
+            <Material diffuseColor="#666" shininess="1" specularColor="#fff" emissiveColor="#aaa"></Material>
+          </Appearance>
+        </Shape>
       </Transform>
 
     </Transform>
@@ -165,7 +204,7 @@
     !function ($) {
         var x3dResize = function () {
             $('#x3d').css( 'height', $(window).height() );
-            $('#x3d').focus(); // @todo is this working?
+            // setTimeout( function () { $('#x3d').focus(); }, 2000 ); // @todo is this working?
         };
         $(function() { // document ready
             $(window).on('resize', x3dResize);
@@ -193,7 +232,7 @@
             //// lib/perlin-noise.js
             contrastNoise( document.getElementById('limbLeftCanvas'),  190, 160);
             contrastNoise( document.getElementById('limbRightCanvas'), 190, 100);
-            contrastNoise( document.getElementById('torsoLeftCanvas'), 190, 190);
+            contrastNoise( document.getElementById('torsoLeftCanvas'), 190, 160);
             contrastNoise( document.getElementById('torsoRightCanvas'),190, 80);
             contrastNoise( document.getElementById('faceLeftCanvas'),  200, 160);
             contrastNoise( document.getElementById('faceRightCanvas'), 200, 100);
