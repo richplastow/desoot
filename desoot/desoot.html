@@ -7,12 +7,12 @@
   <x3d id="x3d"><scene>
     <!-- camera -->
     <navigationinfo type="turntable" avatarSize="10" headlight="false"></navigationinfo>
-    <viewpoint centerOfRotation="40 2 40" position="40 8 50" orientation="1 0 0  -.5"></viewpoint>
+    <viewpoint centerOfRotation="{{looptopianPosition}}" position="{{viewpointPosition}}" orientation="1 0 0  -.5"></viewpoint>
     <Fog color="#359" visibilityRange="50"></Fog>
     <DirectionalLight ambientIntensity='0' color='1,1,1' direction='1 -1 -1' global='true' intensity='1' on='true' shadowCascades='1' shadowFilterSize='0' shadowIntensity='0' shadowMapSize='256' shadowOffset='0' shadowSplitFactor='1' shadowSplitOffset='0.1' zFar='-1' zNear='-1' ></DirectionalLight>
 
     <!-- looptopian -->
-    <Transform translation="40 2 40" scale=".1 .1 .1">
+    <Transform translation="{{looptopianPosition}}" scale=".1 .1 .1">
 
       <Group def="LimbLeft"><!-- left leg -->
         <Shape def="LimbPartLeftEmissive">
@@ -193,7 +193,7 @@
         <appearance>
           <material diffuseColor="{{color}}"></material>
         </appearance>
-          <ElevationGrid creaseAngle="1.57" solid="false" xDimension="{{config.xSectionExtentPlus1}}" zDimension="{{config.zSectionExtentPlus1}}" height="{{height}}"></ElevationGrid>
+          <ElevationGrid creaseAngle="1.57" solid="false" xDimension="{{config.xTileExtentPlus1}}" zDimension="{{config.zTileExtentPlus1}}" height="{{height}}"></ElevationGrid>
       </shape>
     </transform>
     {{/each}}
