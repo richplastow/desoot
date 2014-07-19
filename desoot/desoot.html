@@ -186,15 +186,34 @@
     </transform>
     {{/if}}
 
-    <!-- terrain -->
-    {{#each terrain}}
+    <!-- Tiles -->
+    {{#each tiles}}
     <transform translation="{{x}} 0 {{z}}" scale="1 .1 1">
       <shape id="{{_id}}">
         <appearance>
           <material diffuseColor="{{color}}"></material>
         </appearance>
-          <ElevationGrid creaseAngle="1.57" solid="false" xDimension="{{config.xTileExtentPlus1}}" zDimension="{{config.zTileExtentPlus1}}" height="{{height}}"></ElevationGrid>
+        <ElevationGrid creaseAngle="1.57" solid="false" xDimension="{{config.xTileExtentPlus1}}" zDimension="{{config.zTileExtentPlus1}}" height="{{height}}"></ElevationGrid>
       </shape>
+    </transform>
+    {{/each}}
+
+    <!-- base movers -->
+    {{#each config.movers}}
+    <group def="{{species}}">
+      <shape>
+        <appearance>
+          <material diffuseColor="{{color}}"></material>
+        </appearance>
+        <box size="{{size}}"></box>
+      </shape>
+    </group>
+    {{/each}}
+
+    <!-- movers -->
+    {{#each movers}}
+    <transform translation="{{x}} 1.5 {{z}}">
+      <group id="{{_id}}" use="{{species}}"></group>
     </transform>
     {{/each}}
 
@@ -203,7 +222,7 @@
   <script>
     !function ($) {
         var x3dResize = function () {
-            $('#x3d').css( 'height', $(window).height() );
+            $('#x3d-main').css( 'height', $(window).height() );
             // setTimeout( function () { $('#x3d').focus(); }, 2000 ); // @todo is this working?
         };
         $(function() { // document ready

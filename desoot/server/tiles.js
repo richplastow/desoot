@@ -1,21 +1,21 @@
-// Terrain.remove({});
+// Tiles.remove({});
 
 var
     //// Used to seamlessly join tiles.
     southEdges  = {}
   , eastEdges = {}
 
-    //// Used by `getTerrainType()` to quickly identify which terrain-type to return.
+    //// Used by `getTileType()` to quickly identify which Tile-type to return.
   , xTerrainExtentMinus1 = config.xTerrainExtent - 1
   , zTerrainExtentMinus1 = config.zTerrainExtent - 1
   , xTerrainExtentMinus2 = config.xTerrainExtent - 2
   , zTerrainExtentMinus2 = config.zTerrainExtent - 2
-  , xTerrainExtentMid  = Math.floor( config.xTerrainExtent / 2 )
-  , zTerrainExtentMid  = Math.floor( config.zTerrainExtent / 2 )
+  , xTerrainExtentMid = Math.floor( config.xTerrainExtent / 2 )
+  , zTerrainExtentMid = Math.floor( config.zTerrainExtent / 2 )
 
 
-    //// Returns an object which can be used to generates a semi-random terrain tile, which varies depending on its location.
-  , getTerrainType = function (x, z) {
+    //// Returns an object which can be used to generates a semi-random terrain Tile, which varies depending on its location.
+  , getTileType = function (x, z) {
 
         //// The extreme edges of the terrain are impassable tall mountains.
         if (0 === x || 0 === z || xTerrainExtentMinus1 === x || zTerrainExtentMinus1 === z) {
@@ -25,7 +25,7 @@ var
             }
         }
 
-        //// Terrain tiles next to the tall mountains are foothills.
+        //// Tiles next to the tall mountains are foothills.
         if (1 === x || 1 === z || xTerrainExtentMinus2 === x || zTerrainExtentMinus2 === z) {
             return {
                 height: function () { return Math.floor( Math.random() * 15 ) + 10; }
@@ -49,7 +49,7 @@ var
 
     }
 
-    //// Generates a semi-random terrain tile.
+    //// Generates a semi-random terrain Tile.
     //// Returns an object containing:
     ////     1. A random color
     ////     2. An array of heights along the tile's North edge
@@ -58,10 +58,10 @@ var
     ////       - The first number is the elevation of the North-West corner, eg (-2, *, -2)
     ////       - The second number is for the adjacent point on the North edge, eg (-1, *, -2)
     ////       - After the North-East corner has been reached, eg (2, *, -2), the next number is one square to the South of the North-West corner, eg (-2, *, -1)
-  , randomTile = function (northEdge, westEdge, terrainType) {
+  , randomTile = function (northEdge, westEdge, tileType) {
         var x, z, h
           , out = {
-                color:     terrainType.colors[ Math.floor( Math.random() * terrainType.colors.length ) ]
+                color:     tileType.colors[ Math.floor( Math.random() * tileType.colors.length ) ]
               , height:    ''
               , eastEdge: []
               , southEdge:  []
@@ -71,30 +71,30 @@ var
                     if ( northEdge && 0 === z) {
                         o.push(northEdge[0]);
                     } else {
-                        o.push( terrainType.height() );
+                        o.push( tileType.height() );
                     }
                 };
                 return o;
             }())
           , northEdge = northEdge || (function () { 
                 for (var o=[], x=0; x<config.xTileExtent; x++) {
-                    o.push( terrainType.height() );
+                    o.push( tileType.height() );
                 };
                 return o;
             }())
         ;
 
-        //// Step through the tile, starting in the North-West corner, proceeding along the North edge, and ending at the South-East corner.
+        //// Step through the Tile, starting in the North-West corner, proceeding along the North edge, and ending at the South-East corner.
         for (z=0; z<config.zTileExtentPlus1; z++) {
             for (x=0; x<config.xTileExtentPlus1; x++) {
 
                 //// If we are on the North or West edges, use the height passed in by the caller, so that this tile joins smoothly to the previous. Otherwise, generate a semi-random height.
                 if (0 === x) {
-                    h = westEdge[z] || 0; // @todo investigate why `westEdge[z]` is sometimes `undefined` for tiles on the edge of the terrain
+                    h = westEdge[z] || 0; // @todo investigate why `westEdge[z]` is sometimes `undefined` for Tiles on the edge of the terrain
                 } else if (0 === z) {
-                    h = northEdge[x] || 0; // @todo investigate why `northEdge[x]` is sometimes `undefined` for tiles on the edge of the terrain
+                    h = northEdge[x] || 0; // @todo investigate why `northEdge[x]` is sometimes `undefined` for Tiles on the edge of the terrain
                 } else {
-                    h = terrainType.height();
+                    h = tileType.height();
                 }
 
                 //// If we are on the South or East edges, make a record of the height which can be passed to a later `randomTile()` call.
@@ -116,7 +116,7 @@ var
     }
 
 
-    //// Generates a set of terrain tiles, and records them into the `Terrain` collection.
+    //// Generates a set of terrain Tiles, and records them into the `Tiles` collection.
   , randomTerrain = function () {
         var x, z
           , xTerrainExtentMinus = config.xTerrainExtent - 1
@@ -142,7 +142,7 @@ var
                 }
 
                 //// Generate a random tile.
-                tile = randomTile( northEdge, westEdge, getTerrainType(x, z) );
+                tile = randomTile( northEdge, westEdge, getTileType(x, z) );
 
                 //// Record the edge-heights ready for the adjacent Southerly and Easterly tiles, unless we are on the South or East edges.
                 if (xTerrainExtentMinus !== x) {
@@ -152,8 +152,8 @@ var
                     southEdges[x + ' ' + z]  = tile.southEdge;
                 }
 
-                //// Record the tile to the `Terrain` collection.
-                Terrain.insert({
+                //// Record the Tile to the `Tiles` collection.
+                Tiles.insert({
                     x:      x * config.xTileExtent
                   , z:      z * config.zTileExtent
                   , color:  tile.color
@@ -164,10 +164,10 @@ var
     }
 ;
 
-//// The first time the app starts, generate initial terrain into the DB.
-if ( 0 !== Terrain.find().count() ) {
-    // console.log( Terrain.find().count() );
+//// The first time the app starts, generate initial terrain Tiles and record them into the `Tiles` collection.
+if ( 0 !== Tiles.find().count() ) {
+    // console.log( Tiles.find().count() );
 } else {
-    console.log('Terrain empty...');
+    console.log('The ‘Tiles’ collection is empty...');
     randomTerrain();
 }

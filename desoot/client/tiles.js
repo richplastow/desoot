@@ -4,13 +4,10 @@
 // Session.set('southmost', 4 * 8);
 
 UI.body.helpers({
-    terrain: function () {
-        return Terrain.find({
+    tiles: function () {
+        return Tiles.find({
           //   x: { $gte:Session.get('northmost'), $lt:Session.get('southmost') }
           // , z: { $gte:Session.get('eastmost') , $lt:Session.get('westmost')  }
         });
-    }
-  , config: function () {
-        return config; // from both/config.js
     }
 });
