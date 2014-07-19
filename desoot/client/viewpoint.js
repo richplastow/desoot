@@ -1,4 +1,4 @@
-Session.set('looptopianPosition', [40,2,40]);
+Session.set('looptopianPosition', [40,2,40]); // @todo user db
 
 UI.body.helpers({
     looptopianPosition: function () {
@@ -9,6 +9,8 @@ UI.body.helpers({
         return lp[0] + ' ' + (lp[1] + 6) + ' ' + (lp[2] + 10);
     }
 });
+
+var vpTally = 0;
 
 UI.body.events({
     "mousedown x3d": function () {
@@ -27,10 +29,17 @@ UI.body.events({
         ;
 
         if (1 === evt.button) {
-            console.log('Left Click ', x, y, z, evt.currentTarget.id);
+            // console.log('Left Click ', x, y, z, evt.currentTarget.id);
             Session.set('looptopianPosition', [x,y,z]);
-            var viewpoint = document.getElementById("viewpoint");
-            viewpoint.resetView();
+
+            //// Create a new <VIEWPOINT> after the current one, and give it a unique ID.
+            global.$viewpoint = $('#vp' + vpTally).after('<viewpoint id="vp' + (++vpTally) + '" centerOfRotation="' + [x,y,z].join(' ') + '" position="' + x + ' ' + (y + 6) + ' ' + (z + 10) + '" orientation="1 0 0  -.5"></viewpoint>'); //@todo do we actually need to record `global.$viewpoint`?
+
+            //// Tell X3DOM to animate smoothly to the new <VIEWPOINT>.
+            constant.x3dMain.runtime.nextView();
+
+            //// Delete the previous <VIEWPOINT>.
+            $('#vp' + (vpTally - 1) ).remove();
 
         } else if (2 === evt.button || 4 === evt.button) {
             console.log('Right Click ', x, y, z, evt.currentTarget.id);

@@ -2,8 +2,8 @@
 
 var
     //// Used to seamlessly join tiles.
-    eastEdges  = {}
-  , northEdges = {}
+    southEdges  = {}
+  , eastEdges = {}
 
     //// Used by `getTerrainType()` to quickly identify which terrain-type to return.
   , xTerrainExtentMinus1 = config.xTerrainExtent - 1
@@ -55,28 +55,28 @@ var
     ////     2. An array of heights along the tile's North edge
     ////     3. An array of heights along the tile's East edge
     ////     4. A string of suitable for the `height` attribute of an <ElevationGrid> element:
-    ////       - The first number is the elevation of the South-West corner, eg (-2, *, -2)
-    ////       - The second number is for the adjacent point on the Westernmost edge, eg (-1, *, -2)
-    ////       - After the North-West corner has been reached, eg (2, *, -2), the next number is one-place Easterly of the South-West corner, eg (-2, *, -1)
-  , randomTile = function (westEdge, southEdge, terrainType) {
+    ////       - The first number is the elevation of the North-West corner, eg (-2, *, -2)
+    ////       - The second number is for the adjacent point on the North edge, eg (-1, *, -2)
+    ////       - After the North-East corner has been reached, eg (2, *, -2), the next number is one square to the South of the North-West corner, eg (-2, *, -1)
+  , randomTile = function (northEdge, westEdge, terrainType) {
         var x, z, h
           , out = {
                 color:     terrainType.colors[ Math.floor( Math.random() * terrainType.colors.length ) ]
               , height:    ''
-              , northEdge: []
-              , eastEdge:  []
+              , eastEdge: []
+              , southEdge:  []
             }
-          , southEdge = southEdge || (function () {
+          , westEdge = westEdge || (function () {
                 for (var o=[], z=0; z<config.zTileExtent; z++) {
-                    if ( westEdge && 0 === z) {
-                        o.push(westEdge[0]);
+                    if ( northEdge && 0 === z) {
+                        o.push(northEdge[0]);
                     } else {
                         o.push( terrainType.height() );
                     }
                 };
                 return o;
             }())
-          , westEdge = westEdge || (function () { 
+          , northEdge = northEdge || (function () { 
                 for (var o=[], x=0; x<config.xTileExtent; x++) {
                     o.push( terrainType.height() );
                 };
@@ -84,25 +84,25 @@ var
             }())
         ;
 
-        //// Step through the tile, starting in the South-West corner, proceeding along the Westernmost edge, and ending at the North-East corner.
+        //// Step through the tile, starting in the North-West corner, proceeding along the North edge, and ending at the South-East corner.
         for (z=0; z<config.zTileExtentPlus1; z++) {
             for (x=0; x<config.xTileExtentPlus1; x++) {
 
-                //// If we are on the South or West edges, use the height passed in by the caller, so that this tile joins smoothly to the previous. Otherwise, generate a semi-random height.
+                //// If we are on the North or West edges, use the height passed in by the caller, so that this tile joins smoothly to the previous. Otherwise, generate a semi-random height.
                 if (0 === x) {
-                    h = southEdge[z] || 0; // @todo investigate why `southEdge[z]` is sometimes `undefined` for tiles on the edge of the terrain
+                    h = westEdge[z] || 0; // @todo investigate why `westEdge[z]` is sometimes `undefined` for tiles on the edge of the terrain
                 } else if (0 === z) {
-                    h = westEdge[x] || 0; // @todo investigate why `westEdge[x]` is sometimes `undefined` for tiles on the edge of the terrain
+                    h = northEdge[x] || 0; // @todo investigate why `northEdge[x]` is sometimes `undefined` for tiles on the edge of the terrain
                 } else {
                     h = terrainType.height();
                 }
 
-                //// If we are on the North or East edges, make a record of the height which can be passed to a later `randomTile()` call.
+                //// If we are on the South or East edges, make a record of the height which can be passed to a later `randomTile()` call.
                 if (config.xTileExtent === x) {
-                    out.northEdge.push(h);
+                    out.eastEdge.push(h);
                 }
                 if (config.zTileExtent === z) {
-                    out.eastEdge.push(h);
+                    out.southEdge.push(h);
                 }
 
                 //// Append to the string which will become the `height` attribute of an <ElevationGrid> element.
@@ -123,33 +123,33 @@ var
           , zTerrainExtentMinus = config.zTerrainExtent - 1
         ;
 
-        //// Step through the terrain, starting in the South-West corner, proceeding along the Westernmost edge, and ending at the North-East corner.
+        //// Step through the terrain, starting in the North-West corner, proceeding along the Westernmost edge, and ending at the South-East corner.
         for (z=0; z<config.zTerrainExtent; z++) {
             for (x=0; x<config.xTerrainExtent; x++) {
                 var tile
-                  , westEdge  = false
-                  , southEdge = false
+                  , northEdge  = false
+                  , westEdge = false
                 ;
 
-                //// Grab the cached edge-heights from the adjacent Southerly and Westerly tiles, unless we are on the South or West edges.
+                //// Grab the cached edge-heights from the adjacent Northerly and Westerly tiles, unless we are on the North or West edges.
                 if (0 !== z) {
-                    westEdge = eastEdges[ x + ' ' + (z-1) ];
-                    delete eastEdges[ x + ' ' + (z-1) ];
+                    northEdge = southEdges[ x + ' ' + (z-1) ];
+                    delete southEdges[ x + ' ' + (z-1) ];
                 }
                 if (0 !== x) {
-                    southEdge = northEdges[ (x-1) + ' ' + z ];
-                    delete northEdges[ (x-1) + ' ' + z ];
+                    westEdge = eastEdges[ (x-1) + ' ' + z ];
+                    delete eastEdges[ (x-1) + ' ' + z ];
                 }
 
                 //// Generate a random tile.
-                tile = randomTile( westEdge, southEdge, getTerrainType(x, z) );
+                tile = randomTile( northEdge, westEdge, getTerrainType(x, z) );
 
-                //// Record the edge-heights ready for the adjacent Northerly and Easterly tiles, unless we are on the North or East edges.
+                //// Record the edge-heights ready for the adjacent Southerly and Easterly tiles, unless we are on the South or East edges.
                 if (xTerrainExtentMinus !== x) {
-                    northEdges[x + ' ' + z] = tile.northEdge;
+                    eastEdges[x + ' ' + z] = tile.eastEdge;
                 }
                 if (zTerrainExtentMinus !== z) {
-                    eastEdges[x + ' ' + z]  = tile.eastEdge;
+                    southEdges[x + ' ' + z]  = tile.southEdge;
                 }
 
                 //// Record the tile to the `Terrain` collection.

@@ -4,10 +4,10 @@
 
 <body>
 
-  <x3d id="x3d"><scene>
+  <x3d id="x3d-main"><scene>
     <!-- camera -->
     <navigationinfo type="turntable" avatarSize="10" headlight="false"></navigationinfo>
-    <viewpoint centerOfRotation="{{looptopianPosition}}" position="{{viewpointPosition}}" orientation="1 0 0  -.5"></viewpoint>
+    <viewpoint id="vp0" centerOfRotation="40 2 40" position="40 8 50" orientation="1 0 0  -.5"></viewpoint>
     <Fog color="#359" visibilityRange="50"></Fog>
     <DirectionalLight ambientIntensity='0' color='1,1,1' direction='1 -1 -1' global='true' intensity='1' on='true' shadowCascades='1' shadowFilterSize='0' shadowIntensity='0' shadowMapSize='256' shadowOffset='0' shadowSplitFactor='1' shadowSplitOffset='0.1' zFar='-1' zNear='-1' ></DirectionalLight>
 
@@ -159,29 +159,29 @@
 
 
     <!-- guides -->
-    {{#if config.guides}}
+    {{#if config.showGuides}}
     <transform translation="5 2 0">
         <shape>
             <appearance><material diffuseColor="#000"></material></appearance>
-            <text length="0" string="N 5 2 0"></text>
+            <text length="0" string="E 5 2 0"></text>
         </shape>
     </transform>
     <transform translation="0 2 5">
         <shape>
             <appearance><material diffuseColor="#000"></material></appearance>
-            <text length="0" string="E 0 2 5"></text>
+            <text length="0" string="S 0 2 5"></text>
         </shape>
     </transform>
     <transform translation="-5 2 0">
         <shape>
             <appearance><material diffuseColor="#000"></material></appearance>
-            <text length="0" string="S -5 2 0"></text>
+            <text length="0" string="W -5 2 0"></text>
         </shape>
     </transform>
     <transform translation="0 2 -5">
         <shape>
             <appearance><material diffuseColor="#000"></material></appearance>
-            <text length="0" string="W 0 2 -5"></text>
+            <text length="0" string="N 0 2 -5"></text>
         </shape>
     </transform>
     {{/if}}

@@ -1,13 +1,13 @@
-Session.set('eastmost' , 0 * 8);
-Session.set('westmost' , 8 * 8);
-Session.set('northmost', 0 * 8);
-Session.set('southmost', 8 * 8);
+// Session.set('eastmost' , 2 * 8);
+// Session.set('westmost' , 4 * 8);
+// Session.set('northmost', 2 * 8);
+// Session.set('southmost', 4 * 8);
 
 UI.body.helpers({
     terrain: function () {
         return Terrain.find({
-          //   x: { $gte:Session.get('eastmost') , $lt:Session.get('westmost')  }
-          // , z: { $gte:Session.get('northmost'), $lt:Session.get('southmost') }
+          //   x: { $gte:Session.get('northmost'), $lt:Session.get('southmost') }
+          // , z: { $gte:Session.get('eastmost') , $lt:Session.get('westmost')  }
         });
     }
   , config: function () {
