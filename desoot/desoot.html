@@ -7,8 +7,11 @@
   <x3d id="x3d-main"><scene>
     <!-- camera -->
     <navigationinfo type="turntable" avatarSize="10" headlight="false"></navigationinfo>
-    <viewpoint id="vp0" centerOfRotation="40 2 40" position="40 8 50" orientation="1 0 0  -.5"></viewpoint>
+    <viewpoint id="vp0" centerOfRotation="40 2 40" position="40 4 50" orientation="1 0 0  -.2"></viewpoint>
+
+    <!-- environment -->
     <Fog color="#359" visibilityRange="50"></Fog>
+    <background groundColor="(.2,.33,.6)" skyColor="(.9,1,1)" isActive="true"></background>
     <DirectionalLight ambientIntensity='0' color='1,1,1' direction='1 -1 -1' global='true' intensity='1' on='true' shadowCascades='1' shadowFilterSize='0' shadowIntensity='0' shadowMapSize='256' shadowOffset='0' shadowSplitFactor='1' shadowSplitOffset='0.1' zFar='-1' zNear='-1' ></DirectionalLight>
 
     <!-- looptopian -->
@@ -188,7 +191,7 @@
 
     <!-- Tiles -->
     {{#each tiles}}
-    <transform translation="{{x}} 0 {{z}}" scale="1 .1 1">
+    <transform translation="{{x}} 0 {{z}}" scale="1 .02 1">
       <shape id="{{_id}}">
         <appearance>
           <material diffuseColor="{{color}}"></material>

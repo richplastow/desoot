@@ -2,8 +2,8 @@
 
 var
     //// Used to seamlessly join tiles.
-    southEdges  = {}
-  , eastEdges = {}
+    southEdges = {}
+  , eastEdges  = {}
 
     //// Used by `getTileType()` to quickly identify which Tile-type to return.
   , xTerrainExtentMinus1 = config.xTerrainExtent - 1
@@ -20,24 +20,41 @@ var
         //// The extreme edges of the terrain are impassable tall mountains.
         if (0 === x || 0 === z || xTerrainExtentMinus1 === x || zTerrainExtentMinus1 === z) {
             return {
-                height: function () { return Math.floor( Math.random() * 35 ) + 10; }
+                height: function () { return Math.floor( Math.random() * 350 ) + 100; }
               , colors: [ 'red','orange','brown' ]
+              , isHigh: true
             }
         }
 
         //// Tiles next to the tall mountains are foothills.
         if (1 === x || 1 === z || xTerrainExtentMinus2 === x || zTerrainExtentMinus2 === z) {
             return {
-                height: function () { return Math.floor( Math.random() * 15 ) + 10; }
+                height: function () { return Math.floor( Math.random() * 150 ) + 50; }
               , colors: [ 'orange','yellow','green' ]
+              , isHigh: true
+            }
+        }
+        if (2 === x || 2 === z || xTerrainExtentMinus2 - 1 === x || zTerrainExtentMinus2 - 1 === z) {
+            return {
+                height: function () { return Math.floor( Math.random() * 60 ) + 20; }
+              , colors: [ 'black' ]
+              , isHigh: true
             }
         }
 
         //// The center of the terrain contains a lonely mountain.
         if (xTerrainExtentMid === x && zTerrainExtentMid === z) {
             return {
-                height: function () { return Math.floor( Math.random() * 15 ) + 10; }
+                height: function () { return Math.floor( Math.random() * 150 ) + 50; }
               , colors: [ 'orange','yellow','green' ]
+              , isHigh: true
+            }
+        }
+        if (xTerrainExtentMid + 1 >= x && xTerrainExtentMid - 1 <= x && zTerrainExtentMid + 1 >= z && zTerrainExtentMid - 1 <= z) {
+            return {
+                height: function () { return Math.floor( Math.random() * 60 ) + 20; }
+              , colors: [ 'black' ]
+              , isHigh: true
             }
         }
 
@@ -45,6 +62,7 @@ var
         return {
             height: function () { return Math.floor( Math.random() * 10 ); }
           , colors: [ 'green','cyan','pink' ]
+          , isHigh: false
         }
 
     }
@@ -58,13 +76,14 @@ var
     ////       - The first number is the elevation of the North-West corner, eg (-2, *, -2)
     ////       - The second number is for the adjacent point on the North edge, eg (-1, *, -2)
     ////       - After the North-East corner has been reached, eg (2, *, -2), the next number is one square to the South of the North-West corner, eg (-2, *, -1)
+    ////     5. A handy `isHigh` flag, which speeds up the selector in `client/tiles.js`
   , randomTile = function (northEdge, westEdge, tileType) {
         var x, z, h
           , out = {
                 color:     tileType.colors[ Math.floor( Math.random() * tileType.colors.length ) ]
               , height:    ''
-              , eastEdge: []
-              , southEdge:  []
+              , eastEdge:  []
+              , southEdge: []
             }
           , westEdge = westEdge || (function () {
                 for (var o=[], z=0; z<config.zTileExtent; z++) {
@@ -127,8 +146,9 @@ var
         for (z=0; z<config.zTerrainExtent; z++) {
             for (x=0; x<config.xTerrainExtent; x++) {
                 var tile
-                  , northEdge  = false
-                  , westEdge = false
+                  , tileType
+                  , northEdge = false
+                  , westEdge  = false
                 ;
 
                 //// Grab the cached edge-heights from the adjacent Northerly and Westerly tiles, unless we are on the North or West edges.
@@ -142,7 +162,8 @@ var
                 }
 
                 //// Generate a random tile.
-                tile = randomTile( northEdge, westEdge, getTileType(x, z) );
+                tileType = getTileType(x, z);
+                tile = randomTile( northEdge, westEdge, tileType );
 
                 //// Record the edge-heights ready for the adjacent Southerly and Easterly tiles, unless we are on the South or East edges.
                 if (xTerrainExtentMinus !== x) {
@@ -158,6 +179,7 @@ var
                   , z:      z * config.zTileExtent
                   , color:  tile.color
                   , height: tile.height
+                  , isHigh: tileType.isHigh
                 });
             }
         }

@@ -33,7 +33,7 @@ UI.body.events({
             Session.set('looptopianPosition', [x,y,z]);
 
             //// Create a new <VIEWPOINT> after the current one, and give it a unique ID.
-            global.$viewpoint = $('#vp' + vpTally).after('<viewpoint id="vp' + (++vpTally) + '" centerOfRotation="' + [x,y,z].join(' ') + '" position="' + x + ' ' + (y + 6) + ' ' + (z + 10) + '" orientation="1 0 0  -.5"></viewpoint>'); //@todo do we actually need to record `global.$viewpoint`?
+            global.$viewpoint = $('#vp' + vpTally).after('<viewpoint id="vp' + (++vpTally) + '" centerOfRotation="' + [x,y,z].join(' ') + '" position="' + x + ' ' + (y + 2) + ' ' + (z + 10) + '" orientation="1 0 0  -.2"></viewpoint>'); //@todo do we actually need to record `global.$viewpoint`?
 
             //// Tell X3DOM to animate smoothly to the new <VIEWPOINT>.
             constant.x3dMain.runtime.nextView();

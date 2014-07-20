@@ -1,13 +1,20 @@
-// Session.set('eastmost' , 2 * 8);
-// Session.set('westmost' , 4 * 8);
-// Session.set('northmost', 2 * 8);
-// Session.set('southmost', 4 * 8);
-
 UI.body.helpers({
     tiles: function () {
-        return Tiles.find({
-          //   x: { $gte:Session.get('northmost'), $lt:Session.get('southmost') }
-          // , z: { $gte:Session.get('eastmost') , $lt:Session.get('westmost')  }
-        });
+        var
+            position = Session.get('looptopianPosition') // @todo user db
+          , x = position[0]
+          , z = position[2]
+          , selector = { $or: [ // http://docs.mongodb.org/manual/reference/operator/query/or/
+                {
+                    x: { $gte:x - config.xTileFar, $lt:x + config.xTileFar }
+                  , z: { $gte:z - config.zTileFar, $lt:z + config.zTileFar }
+                },{
+                    isHigh: true
+                }
+            ]}
+        ;
+
+        //// Xx.
+        return Tiles.find(selector);
     }
 });
